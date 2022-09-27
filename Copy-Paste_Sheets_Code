@@ -1,0 +1,59 @@
+Sub CopyColumnD_AllShts()
+  
+    Dim wsSource As Worksheet
+    Dim wsDestin As Worksheet
+    Dim lngDestinRow As Long
+    Dim rngSource As Range
+    Dim rngCel As Range
+    Dim bolErrorZero As Boolean
+   
+     'On Error GoTo Err_Execute   'Optional code. Also see label at bottom
+   
+    Set wsDestin = Sheets("Action Items")   '<---**** Edit to your report sheet name
+   
+    For Each wsSource In Worksheets
+        If wsSource.Name <> wsDestin.Name Then       'Excludes the destination worksheet from loop
+            With wsSource
+    
+                'Following line assumes column headers in Source worksheet so starts at row2
+                Set rngSource = .Range(.Cells(2, "D"), .Cells(.Rows.Count, "D").End(xlUp))
+            End With
+           
+            'This code copies and paste the cells as is including formulas
+            'For Each rngCel In rngSource
+             '   If rngCel.Value > 0 Then
+              '      With wsDestin
+               '         'Following line assumes column headers in Destination worksheet
+                '        lngDestinRow = .Cells(.Rows.Count, "Y").End(xlUp).Offset(1, 0).Row
+                 '       rngCel.EntireRow.Copy Destination:=wsDestin.Cells(lngDestinRow, "A")
+                  '     End With
+               ' End If
+            'Next rngCel
+           
+           
+            'This code copies and paste values only without formulas
+            
+            For Each rngCel In rngSource
+    
+                If rngCel.Value = "Action Item" Then
+            With wsDestin
+                'Following line assumes column headers in Destination worksheet
+                lngDestinRow = .Cells(.Rows.Count, "D").End(xlUp).Offset(1, 0).Row
+                rngCel.EntireRow.Copy Destination:=wsDestin.Cells(lngDestinRow, "A")
+                    
+                    End With
+                'Else
+                'If Not rngCel.Value Is Nothing Then
+                    'If Not IsError(rngCel.Value) Then
+                    'End If
+                End If
+            Next rngCel
+        End If
+    Next wsSource
+   
+    MsgBox "All matching data has been copied."
+   
+    Exit Sub
+   
+
+    End Sub
